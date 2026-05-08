@@ -42,6 +42,20 @@ npx vercel deploy --prod
 - 如果你要把“最新原图 + prompt.md + manifest.json”作为静态站内容发布，请先在本地更新 `public/collected/live-gpt-image-2/`，再部署。
 - 可用命令：`npm run collect:live-gpt-image-2:x`（同步/去重本地 manifest + prompt.md），以及 `npm run deploy:prod`（仅提交并 push 与站点相关的文件）。
 
+## 自动每小时更新（推荐）
+
+仓库已内置 GitHub Actions 定时任务：`.github/workflows/hourly-x-collector.yml`，每小时会：
+1) 调用 X Recent Search API 拉取最近 1 小时的相关推文（需要图片 + prompt 关键字）
+2) 下载原图到 `public/collected/live-gpt-image-2/<createdAt>-<tweetId>/original-*.{jpg|png|webp}`
+3) 同步 `manifest.json` 与 `prompt.md`
+4) 自动提交并 push 到 `main`，触发 Vercel 自动部署
+
+你需要在 GitHub 仓库里配置：
+- `Settings → Secrets and variables → Actions → Secrets`：新增 `X_BEARER_TOKEN`
+- （可选）`Settings → Secrets and variables → Actions → Variables`：新增 `DEFAULT_SEARCH_QUERY`
+
+注意：每小时 push 一次会触发 Vercel 每小时部署一次；如果你只想更新数据但不频繁重新构建，也可以改为更低频（比如每天一次）或改成 Vercel Cron + Blob 存储方案。
+
 ## 环境变量
 
 - `X_BEARER_TOKEN`：可选。配置后优先使用 X 官方 Recent Search API。
