@@ -10,6 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "collect:fetch-live-gpt-image-2:x": "node scripts/fetch-live-gpt-image-2-x.mjs",
     "collect:live-gpt-image-2:x": "node scripts/collect-live-gpt-image-2-x.mjs",
     "deploy:prod": "bash scripts/deploy-prod.sh"
   },
